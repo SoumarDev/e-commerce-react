@@ -10,21 +10,24 @@ import CategoryPage from './pages/CategoryPage.jsx'
 import CartPage from './pages/CartPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import NotFoundPage from './pages/NotFound.jsx'
+import { CartProvider } from './context/CartContext.jsx'
 
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />}>
-          <Route index element={<Homepage />} /> 
-          <Route path="kategorie/:slug" element={<CategoryPage />} /> 
-          <Route path="produkt/:id" element={<ProductPage />} /> 
-          <Route path="warenkorb" element={<CartPage />} /> 
-          <Route path="login" element={<LoginPage />} /> 
-          <Route path="*" element={<NotFoundPage />} /> 
-        </Route>
-      </Routes>
+      <CartProvider>
+        <Routes>
+          <Route path="/" element={<App />}>
+            <Route index element={<Homepage />} /> 
+            <Route path="kategorie/:slug" element={<CategoryPage />} /> 
+            <Route path="produkt/:id" element={<ProductPage />} /> 
+            <Route path="warenkorb" element={<CartPage />} /> 
+            <Route path="login" element={<LoginPage />} /> 
+            <Route path="*" element={<NotFoundPage />} /> 
+          </Route>
+        </Routes>
+       </CartProvider>
     </BrowserRouter>
   </StrictMode>,
 )
