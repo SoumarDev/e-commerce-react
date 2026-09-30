@@ -1,0 +1,16 @@
+export const megaMenu = [
+    {slug: "kameras", label: "Kameras", columns: []},
+    {slug: "objektive", label: "Objektive", columns: []},
+    {slug: "fototaschen", label: "Fototaschen", columns: []},
+    {slug: "speicher", label: "Speicher", columns: []},
+    {slug: "fernglaeser", label: "Ferngläser", columns: []},
+    {slug: "zubehoer", label: "Zubehör", columns: []},
+    {slug: "stative", label: "Stative", columns: []},
+    {slug: "filter", label: "Filter", columns: []},
+    {slug: "blitz-licht", label: "Blitz & Licht", columns: []},
+    {slug: "video", label: "Video", columns: []},
+    {slug: "outlet", label: "Outlet", columns: []},
+    {slug: "kurse-events", label: "Kurse/Events", columns: []},
+    {slug: "outdoor-hobby", label: "Outdoor & Hobby", columns: []},
+    {slug: "dealzone", label: "Dealzone", columns: []},
+]

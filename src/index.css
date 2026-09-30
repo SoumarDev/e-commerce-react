@@ -65,3 +65,36 @@ header .header-icons a {
   color: var(--body-10);
   font-size: var(--fs-label);
 }
+.links ul li a {
+  color: var(--body-40);
+  font-size: var(--fs-label);
+  text-decoration: none;
+  transition: color var(--transition) ease;
+}
+.links ul li a:hover,
+.links ul li a:focus {
+  color: var(--body-10);
+  text-decoration: underline;
+}
+header input[type="search"] {
+  height: 40px;
+  padding: 6px;
+  border: 1px solid var(--body-85);
+  border-right: none;
+  border-radius: 5px 0 0 5px;
+  outline: none;
+}
+header input[type="search"]:focus {
+  border: 2px solid var(--body-40);
+}
+header .btn-search {
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--body-85);
+  border-left: none;
+  border-radius: 0 5px 5px 0;
+  background-color: var(--white);
+}
