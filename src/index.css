@@ -172,3 +172,28 @@ header .btn-search {
   font-size: calc(var(--fs-label) - 2px);
   color: var(--body-40);
 }
+/* Breadcrumb */
+.breadcrumb {
+  gap: 6px;
+  font-size: 13px;
+  color: var(--body-40);
+}
+.breadcrumb a {
+  color: var(--body-40);
+  text-decoration: none;
+}
+.breadcrumb a:hover,
+.breadcrumb a:focus {
+  text-decoration: underline;
+}
+.breadcrumb .current-cat {
+  color: var(--body-10);
+}
+
+/* CategoryPage: Sortier-Leiste */
+.select-container select {
+  padding: 6px;
+  border: 1px solid var(--body-85);
+  border-radius: 5px;
+}
+
