@@ -2,7 +2,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faLocationDot, faCartShopping, faUser, faBars } from '@fortawesome/free-solid-svg-icons'
 import { megaMenu } from '../data/megaMenu';
 import { Link } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
+
 export default function Header() {
+    const { cart } = useCart()
+    const totalQty = cart.reduce((sum, item) => sum + item.qty, 0)
 
     const navElements = megaMenu.map(e => {
         return (
@@ -32,7 +36,7 @@ export default function Header() {
                     <a href="shopping-cart.html" className="cart d-flex flex-column align-items-center gap-2">
                         <span className="cart-icon-wrap">
                             <FontAwesomeIcon icon={faCartShopping} />
-                            <span className="cart-badge">0</span>
+                            <span className="cart-badge">{totalQty}</span>
                         </span>
                         <span className="icon-label">Warenkorp</span>
                     </a>
