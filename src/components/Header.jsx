@@ -33,14 +33,14 @@ export default function Header() {
                 </form>
                 <div className="header-icons d-flex align-items-center gap-3">
                     <a href="#location" className="location d-flex flex-column align-items-center gap-2"><FontAwesomeIcon icon={faLocationDot}/><span className="icon-label">Filialen</span></a>
-                    <a href="shopping-cart.html" className="cart d-flex flex-column align-items-center gap-2">
+                    <Link to="/warenkorb" className="cart d-flex flex-column align-items-center gap-2">
                         <span className="cart-icon-wrap">
                             <FontAwesomeIcon icon={faCartShopping} />
                             <span className="cart-badge">{totalQty}</span>
                         </span>
                         <span className="icon-label">Warenkorp</span>
-                    </a>
-                    <a href="login.html" className="user d-flex flex-column align-items-center gap-2"><FontAwesomeIcon icon={faUser}/><span className="icon-label">Anmelden</span></a> 
+                    </Link>
+                    <Link to="/login" className="user d-flex flex-column align-items-center gap-2"><FontAwesomeIcon icon={faUser}/><span className="icon-label">Anmelden</span></Link>
                     <button className="bars "><FontAwesomeIcon icon={faBars} /></button> 
                 </div>    
               </div>
