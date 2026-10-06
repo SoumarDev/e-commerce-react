@@ -19,7 +19,7 @@ export default function CategoryPage() {
     })
    
     return (
-         <div className="container py-4">
+         <div className="category-content container py-4">
             <nav className="breadcrumb d-flex flex-wrap py-3" aria-label="Breadcrumb">
                 <Link to="/">Start</Link>
                 <span aria-hidden="true">/</span>

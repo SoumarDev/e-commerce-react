@@ -208,6 +208,11 @@ header .btn-search {
   color: var(--body-10);
 }
 
+/* CategoryPage: Inhaltsbereich */
+.category-content {
+  background-color: var(--white);
+}
+
 /* CategoryPage: Sortier-Leiste */
 .select-container select {
   padding: 6px;
