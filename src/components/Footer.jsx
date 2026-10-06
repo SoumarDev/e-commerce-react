@@ -45,7 +45,7 @@ export default function Footer() {
                 <ul className="list-unstyled">
                     {col.links.map(link => (
                         <li key={link.label} className={link.className}>
-                            <a href={link.href} className="text-reset">{link.label}</a>
+                            <a href={link.href}>{link.label}</a>
                         </li>
                     ))}
                 </ul>

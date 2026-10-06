@@ -459,6 +459,7 @@ header .btn-search {
 }
 .footer-nav a {
   text-decoration: none;
+  color: var(--body-10);
 }
 .footer-nav ul li a:hover,
 .footer-nav ul li a:focus {
@@ -486,6 +487,66 @@ header .btn-search {
   height: 75px;
   width: 75px;
   object-fit: contain;
+}
+/* Hero-Carousel */
+.hero-carousel {
+  width: 100%;
+  height: 450px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-carousel .carousel-item {
+  width: 100%;
+  height: 450px;
+  object-fit: cover;
+  object-position: top;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+.hero-carousel .carousel-item.active {
+  opacity: 1;
+  visibility: visible;
+}
+.carousel-dots {
+  z-index: 2;
+}
+.carousel-dots .dot {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}
+.carousel-dots .dot.active {
+  background-color: var(--primary-50);
+}
+.slider-btn {
+  border: none;
+  font-size: 24px;
+  background: var(--primary);
+  color: var(--white);
+  cursor: pointer;
+  z-index: 2;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  transition: var(--transition) ease;
+}
+.carousel-prev {
+  left: -50px;
+}
+.carousel-next {
+  right: -50px;
+}
+.hero-carousel:hover .carousel-prev {
+  left: 15px;
+}
+.hero-carousel:hover .carousel-next {
+  right: 15px;
 }
 /* Section title (Warenkorb, Kategorie) */
 .section-title {
