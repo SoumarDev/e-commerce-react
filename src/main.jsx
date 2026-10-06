@@ -11,11 +11,13 @@ import CartPage from './pages/CartPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import NotFoundPage from './pages/NotFound.jsx'
 import { CartProvider } from './context/CartContext.jsx'
+import ScrollToTop from './components/ScrollToTop.jsx'
 
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
+      <ScrollToTop />
       <CartProvider>
         <Routes>
           <Route path="/" element={<App />}>
@@ -27,7 +29,7 @@ createRoot(document.getElementById('root')).render(
             <Route path="*" element={<NotFoundPage />} /> 
           </Route>
         </Routes>
-       </CartProvider>
+      </CartProvider>
     </BrowserRouter>
   </StrictMode>,
 )
