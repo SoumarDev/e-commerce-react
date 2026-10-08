@@ -60,13 +60,11 @@ body {
   padding-left: 30px;
   padding-right: 30px;
 }
-
 /* Header */
 header {
   background: var(--white);
   color: var(--body-10);
 }
-
 /* Header: Logo */
 header .logo {
   text-decoration: none;
@@ -78,13 +76,11 @@ header .logo img {
   border-radius: 50%;
   border: 3px solid rgb(255, 102, 0);
 }
-
 /* Header: Icons (Filialen/Warenkorb/Anmelden/Burger) */
 header .header-icons a {
   color: var(--body-10);
   font-size: var(--fs-label);
 }
-
 /* Header: Nav-Leiste / Mega-Menü Top-Level-Links */
 .links {
   background-color: var(--white);
@@ -101,7 +97,6 @@ header .header-icons a {
   color: var(--body-10);
   text-decoration: underline;
 }
-
 /* Header: Suchformular */
 header input[type="search"] {
   height: 40px;
@@ -125,7 +120,6 @@ header .btn-search {
   border-radius: 0 5px 5px 0;
   background-color: var(--white);
 }
-
 /* ProductCard: Grid-Layout der Produktliste */
 .products {
   display: grid;
@@ -134,11 +128,10 @@ header .btn-search {
   text-align: center;
   padding: 10px;
 }
-
-/* ProductCard: einzelne Karte */
-.product-card {
+/* ProductCard / TopCategories: Karte (gleiches Aussehen, zwei Klassennamen) */
+.product-card,
+.category {
   width: 100%;
-  height: 370px;
   background-color: var(--white);
   border: none;
   border-radius: 8px;
@@ -146,29 +139,47 @@ header .btn-search {
   text-align: center;
   transition: var(--transition) ease;
 }
-.product-card a {
+.product-card {
+  height: 370px;
+}
+.category {
+  height: 310px;
+}
+.product-card a,
+.category a {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 10px;
   text-decoration: none;
 }
-.product-card img {
+.product-card img,
+.category img {
   height: 215px;
   width: 215px;
   padding: 15px;
   margin-bottom: 10px;
   object-fit: contain;
 }
-.product-card h3 {
+.product-card h3,
+.category h3 {
   font-size: var(--fs-label);
   color: var(--body-10);
 }
 .product-card:hover,
-.product-card:focus {
+.product-card:focus,
+.category:hover,
+.category:focus {
   box-shadow: 0px 0px 8px var(--shadow-color);
 }
-
+/* TopCategories: Grid-Layout */
+.top-categ {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(225px, 1fr));
+  gap: 15px;
+  text-align: center;
+  padding: 10px;
+}
 /* PriceBox */
 .price-box {
   width: 100%;
@@ -551,7 +562,9 @@ header .btn-search {
 /* Section title (Warenkorb, Kategorie) */
 .section-title {
   text-align: center;
-  padding: 10px;
+  padding: 20px;
+  font-weight: bold;
+  font-size: var(--fs-title);
 }
 /* CartPage */
 .cart-page {

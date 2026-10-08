@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons"
+import { Link } from "react-router-dom"
+import { categories } from "../data/categories"
 
 const carouselImages = [
     {id: 1, src: "/images/carousel-imags/carousel1.jpg",  alt: "Kamera-Angebot 1"},
@@ -8,6 +10,20 @@ const carouselImages = [
     {id: 3, src: "/images/carousel-imags/carousel3.jpg",  alt: "Kamera-Angebot 3"},
 ]
 
+const categoryImages = [
+    {slug: "objektive", image: "/images/top-category/top-cat-images/objektive.jpg"},
+    {slug: "digitalKameras", image: "/images/top-category/top-cat-images/Digitalcam.jpg"},
+    {slug: "digitaleKompaktkameras", image: "/images/top-category/top-cat-images/digital-compact-camera.jpg"},
+    {slug: "spiegleLoseSystemkameras", image: "/images/top-category/top-cat-images/fuji-systemCameras.jpg"},
+    {slug: "gebrauchteKameras", image: "/images/top-category/top-cat-images/canon-gebraucht.jpg"},
+    {slug: "sonyObjektive", image: "/images/top-category/top-cat-images/sony-e-object.jpg"},
+    {slug: "canonObjektive", image: "/images/top-category/top-cat-images/canon-rf-object.jpg"},
+    {slug: "nikonObjektive", image: "/images/top-category/top-cat-images/nikon-z-object.jpg"},
+    {slug: "fujiObjektive", image: "/images/top-category/top-cat-images/fujifilm-object.jpg"},
+    {slug: "fujiSystemkameras", image: "/images/top-category/top-cat-images/fuji-systemCameras.jpg"},
+    {slug: "fotoZubehoer", image: "/images/top-category/top-cat-images/fotoZuBehoer.jpg"},
+    {slug: "fernglaeser", image: "/images/top-category/top-cat-images/fernglaeser.jpg"},
+]
 export default function Homepage() {
     const [index, setIndex] = useState(0)
 
@@ -22,32 +38,46 @@ export default function Homepage() {
     const prev = () => setIndex(i => (i - 1 + carouselImages.length) % carouselImages.length)
     const next = () => setIndex(i => (i + 1) % carouselImages.length)
     return (
-        <div className="hero-carousel">
-            {carouselImages.map((img, i) => (
-                <img
-                   key={img.id}  
-                   src={img.src}
-                   alt={img.alt} 
-                   className={i === index ? "carousel-item active" : "carousel-item"}
-                />
-            ))}
-            <button className="slider-btn carousel-prev position-absolute top-50 translate-middle-y" onClick={prev} aria-label="Vorheriges Bild">
-                <FontAwesomeIcon icon={faChevronLeft} />
-            </button>
-            <button className="slider-btn carousel-next position-absolute top-50 translate-middle-y" onClick={next} aria-label="Nächtess Bild">
-                <FontAwesomeIcon icon={faChevronRight} />
-            </button>
-            
-            <div className="carousel-dots position-absolute bottom-0 start-50 translate-middle-x mb-3 d-flex gap-2">
+        <>
+            <div className="hero-carousel">
                 {carouselImages.map((img, i) => (
-                    <button 
-                        key={img.id}
-                        className={i === index ? "dot active" : "dot"}
-                        onClick={() => setIndex(i)}
-                        aria-label={`Bild ${i + 1}`}
+                    <img
+                    key={img.id}  
+                    src={img.src}
+                    alt={img.alt} 
+                    className={i === index ? "carousel-item active" : "carousel-item"}
                     />
                 ))}
+                <button className="slider-btn carousel-prev position-absolute top-50 translate-middle-y" onClick={prev} aria-label="Vorheriges Bild">
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                </button>
+                <button className="slider-btn carousel-next position-absolute top-50 translate-middle-y" onClick={next} aria-label="Nächtess Bild">
+                    <FontAwesomeIcon icon={faChevronRight} />
+                </button>
+                
+                <div className="carousel-dots position-absolute bottom-0 start-50 translate-middle-x mb-3 d-flex gap-2">
+                    {carouselImages.map((img, i) => (
+                        <button 
+                            key={img.id}
+                            className={i === index ? "dot active" : "dot"}
+                            onClick={() => setIndex(i)}
+                            aria-label={`Bild ${i + 1}`}
+                        />
+                    ))}
+                </div>
             </div>
-        </div>
+            <h2 className="section-title">Unsere Top Kategorien</h2>        
+            <section className="top-categ">
+                {categoryImages.map(item => (
+                    <article key={item.slug} className="category">
+                        <Link to={`/kategorie/${item.slug}`}>
+                            <img src={item.image} alt={categories[item.slug]} />
+                            <h3>{categories[item.slug]}</h3>
+                        </Link>
+                    </article>
+                ))}
+
+            </section>
+        </>
     )
 }
