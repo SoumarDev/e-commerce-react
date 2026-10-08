@@ -24,6 +24,22 @@ const categoryImages = [
     {slug: "fotoZubehoer", image: "/images/top-category/top-cat-images/fotoZuBehoer.jpg"},
     {slug: "fernglaeser", image: "/images/top-category/top-cat-images/fernglaeser.jpg"},
 ]
+
+const brandLogos = [
+    { name: "B-&-W", src: "/images/top-brands/logo_cases_of_success1.svg" },
+    { name: "Canon", src: "/images/top-brands/Canon2.svg" },
+    { name: "DJI", src: "/images/top-brands/DJI3.svg" },
+    { name: "ecoflow", src: "/images/top-brands/ecoflow4.svg" },
+    { name: "Instax", src: "/images/top-brands/Instax5.svg" },
+    { name: "Joby", src: "/images/top-brands/Joby6.svg" },
+    { name: "kahles", src: "/images/top-brands/kahles7.svg" },
+    { name: "Lowepro", src: "/images/top-brands/Lowepro8.svg" },
+    { name: "Nikon", src: "/images/top-brands/Nikon9.svg" },
+    { name: "om-system", src: "/images/top-brands/om-system10.svg" },
+    { name: "Panasonic", src: "/images/top-brands/Panasonic11.svg" },
+    { name: "Sirui", src: "/images/top-brands/Sirui12.svg" },
+]
+
 export default function Homepage() {
     const [index, setIndex] = useState(0)
 
@@ -66,6 +82,7 @@ export default function Homepage() {
                     ))}
                 </div>
             </div>
+            
             <h2 className="section-title">Unsere Top Kategorien</h2>        
             <section className="top-categ">
                 {categoryImages.map(item => (
@@ -76,7 +93,17 @@ export default function Homepage() {
                         </Link>
                     </article>
                 ))}
-
+            </section>
+            
+            <h2 className="section-title">Unsere Top Brands</h2>
+            <section className="top-brands d-flex flex-wrap justify-content-center align-items-center gap-3 mb-3">
+                {brandLogos.map(brand => (
+                    <article key={brand.name} className="brand bg-white rounded p-3">
+                        <a href="#">
+                            <img src={brand.src} alt={brand.name}/>
+                        </a>
+                    </article>
+                ))}
             </section>
         </>
     )
