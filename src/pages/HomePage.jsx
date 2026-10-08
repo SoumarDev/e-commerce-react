@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons"
 import { Link } from "react-router-dom"
 import { categories } from "../data/categories"
+import Newsletter from "../components/home/Newsletter"
 
 const carouselImages = [
     {id: 1, src: "/images/carousel-imags/carousel1.jpg",  alt: "Kamera-Angebot 1"},
@@ -105,6 +106,8 @@ export default function Homepage() {
                     </article>
                 ))}
             </section>
+
+            <Newsletter />
         </>
     )
 }

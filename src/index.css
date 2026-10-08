@@ -55,6 +55,10 @@ body {
     background: var(--body-95);
     color: var(--body-10);
 }
+a {
+  text-decoration: none;
+  color: var(--body-10);
+}
 .container {
   max-width: none;
   padding-left: 30px;
@@ -172,9 +176,93 @@ header .btn-search {
 .category:focus {
   box-shadow: 0px 0px 8px var(--shadow-color);
 }
+/* Newsletter */
+.social-and-newsletter {
+  padding: 15px;
+}
+.social-and-newsletter .container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 100px;
+  margin-bottom: 20px;
+}
+.social-content,
+.newsletter-content {
+  width: calc(100% / 2);
+}
+.social-content p,
+.newsletter-content p {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+.social-content h3,
+.newsletter-content h3 {
+  font-size: 1.17em;
+  font-weight: bold;
+  margin: 1em 0;
+}
+.social-links {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.social-links .links {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: inherit;
+  margin-bottom: 10px;
+}
+.social-links a:hover,
+.social-links a:focus {
+  text-decoration: underline;
+}
+.social-links span {
+  margin-left: 10px;
+}
+.social-links svg {
+  font-size: calc(var(--fs-icon) + 5px);
+}
+.newsletter-content form {
+  width: 90%;
+  margin-bottom: 5px;
+}
+.newsletter-content .form-control {
+  height: 35px;
+  border: none;
+  border-radius: 5px 0 0 5px;
+  padding: 8px;
+  background-color: var(--white);
+}
+.newsletter-content .submit-btn {
+  height: 35px;
+  width: 45px;
+  color: var(--white);
+  background-color: var(--primary);
+  border: none;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  transition: background-color var(--transition) ease;
+}
+.newsletter-content .submit-btn:hover,
+.newsletter-content .submit-btn:focus {
+  background-color: var(--primary-50);
+}
+.newsletter-content .newsletter-note {
+  font-size: 13px;
+}
+@media (max-width: 768px) {
+  .social-and-newsletter .container {
+    flex-wrap: wrap;
+    gap: 50px;
+  }
+}
 /* Marken-Strip */
 .brand {
   max-width: 230px;
+  transition: var(--transition) ease;
 }
 .brand img {
   width: 100%;
