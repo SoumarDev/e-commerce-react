@@ -259,6 +259,16 @@ header .btn-search {
     gap: 50px;
   }
 }
+/* Login */
+.login-content {
+  max-width: 500px;
+  margin: 20px auto;
+  background-color: var(--white);
+}
+.login-content a:hover,
+.login-content a:focus {
+  color: var(--primary-50);
+}
 /* Empfehlungs-Slider */
 .recommended-prod {
   background-color: var(--white);
