@@ -86,9 +86,22 @@ header .header-icons a {
   font-size: var(--fs-label);
 }
 /* Header: Nav-Leiste / Mega-Menü Top-Level-Links */
-.links {
+header .links {
+  position: relative;
   background-color: var(--white);
   padding-top: 10px;
+}
+.links ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 30px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.links ul li {
+  position: relative;
 }
 .links ul li a {
   color: var(--body-40);
@@ -100,6 +113,90 @@ header .header-icons a {
 .links ul li a:focus {
   color: var(--body-10);
   text-decoration: underline;
+}
+.links ul li.dealzone > a {
+  color: var(--primary);
+}
+/* Mega-Menü: Dropdown */
+.sub-links {
+  display: flex;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  gap: 20px;
+  padding: 20px;
+  position: absolute;
+  z-index: 3;
+  background-color: var(--white);
+  box-shadow: 0px 20px 20px var(--shadow-color);
+  top: 100%;
+  left: 0;
+  max-width: calc(100vw - 30px);
+  flex-wrap: wrap;
+}
+.sub-links ul {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.sub-links ul li {
+  font-size: var(--fs-label);
+  line-height: 1.15;
+}
+.sub-links ul li a {
+  color: var(--body-40);
+  transition: color var(--transition) ease;
+}
+.sub-links ul li:first-child a {
+  font-size: calc(var(--fs-label) + 1px);
+  font-weight: 600;
+  color: var(--body-30);
+}
+.sub-links ul li:last-child {
+  margin-bottom: 25px;
+}
+.sub-links ul li a:hover,
+.sub-links ul li a:focus {
+  text-decoration: underline;
+  color: var(--body-10);
+}
+.links ul li:hover .sub-links,
+.links ul li:focus-within .sub-links {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+@media (min-width: 990px) {
+  .sub-links {
+    justify-content: flex-start;
+    width: 900px;
+  }
+  .sub-links ul {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .sub-links ul li:last-child {
+    margin-bottom: 0px;
+  }
+  .links ul li:not(.outdoor-hobby):not(.dealzone) {
+    position: static;
+  }
+  .links ul .outdoor-hobby .sub-links,
+  .links ul .dealzone .sub-links {
+    left: auto;
+    right: 0;
+  }
+}
+@media (min-width: 1200px) {
+  .sub-links {
+    justify-content: flex-start;
+    gap: 70px;
+    width: 1100px;
+  }
 }
 /* Header: Suchformular */
 header input[type="search"] {
