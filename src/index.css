@@ -269,6 +269,17 @@ header .btn-search {
 .login-content a:focus {
   color: var(--primary-50);
 }
+/* 404 */
+.not-found-content {
+  max-width: 500px;
+  margin: 60px auto;
+  padding: 15px;
+}
+.not-found-content h1 {
+  font-size: 4rem;
+  color: var(--primary);
+  font-weight: bold;
+}
 /* Empfehlungs-Slider */
 .recommended-prod {
   background-color: var(--white);
