@@ -2,11 +2,12 @@ export const megaMenu = [
   {
     slug: "kameras",
     label: "Kameras",
+    to: "/kategorie/digitalKameras",
     columns: [
       [
-        { label: "Kameras", href: "#" },
-        { label: "Systemkameras", href: "#" },
-        { label: "Kompaktkameras", href: "#" },
+        { label: "Kameras", href: "/kategorie/digitalKameras" },
+        { label: "Systemkameras", href: "/kategorie/spiegleLoseSystemkameras" },
+        { label: "Kompaktkameras", href: "/kategorie/digitaleKompaktkameras" },
         { label: "SLR-Kameras", href: "#" },
         { label: "360 Grad & Panorama", href: "#" },
       ],
@@ -35,12 +36,13 @@ export const megaMenu = [
   {
     slug: "objektive",
     label: "Objektive",
+    to: "/kategorie/objektive",
     columns: [
       [
-        { label: "Sony E-Mount", href: "#" },
-        { label: "Canon RF", href: "#" },
-        { label: "Nikon Z", href: "#" },
-        { label: "Fujifilm X", href: "#" },
+        { label: "Sony E-Mount", href: "/kategorie/sonyObjektive" },
+        { label: "Canon RF", href: "/kategorie/canonObjektive" },
+        { label: "Nikon Z", href: "/kategorie/nikonObjektive" },
+        { label: "Fujifilm X", href: "/kategorie/fujiObjektive" },
         { label: "Micro Four Thirds", href: "#" },
       ],
       [
@@ -51,8 +53,8 @@ export const megaMenu = [
         { label: "Makroobjektive", href: "#" },
       ],
       [
-        { label: "Sony", href: "#" },
-        { label: "Canon", href: "#" },
+        { label: "Sony", href: "/kategorie/sonyObjektive" },
+        { label: "Canon", href: "/kategorie/canonObjektive" },
         { label: "Sigma", href: "#" },
         { label: "Tamron", href: "#" },
         { label: "Viltrox", href: "#" },
@@ -124,6 +126,7 @@ export const megaMenu = [
   {
     slug: "fernglaeser",
     label: "Ferngläser",
+    to: "/kategorie/fernglaeser",
     columns: [
       [
         { label: "Vogelbeobachtung", href: "#" },
@@ -152,6 +155,7 @@ export const megaMenu = [
   {
     slug: "zubehoer",
     label: "Zubehör",
+    to: "/kategorie/fotoZubehoer",
     columns: [
       [
         { label: "Akkus & Ladegeräte", href: "#" },
@@ -290,7 +294,7 @@ export const megaMenu = [
         { label: "Auslaufmodelle", href: "#" },
       ],
       [
-        { label: "Gebrauchte Kameras", href: "#" },
+        { label: "Gebrauchte Kameras", href: "/kategorie/gebrauchteKameras" },
         { label: "Gebrauchte Objektive", href: "#" },
       ],
       [{ label: "Garantie & Rückgabe", href: "#" }],

@@ -8,7 +8,11 @@ export default function MegaMenu () {
             <ul>
                 {megaMenu.map(entry => (
                     <li key={entry.slug} className={entry.slug}>
-                        <Link to={`/kategorie/${entry.slug}`}>{entry.label}</Link>
+                        {entry.to 
+                            ? <Link to={entry.to}>{entry.label}</Link>
+                            : <a href="#">{entry.label}</a>
+                        }
+                        
                         <div className="sub-links">
                             {entry.columns.map((column, i) => (
                                 <MegaMenuColumn key={i} links={column}/>
