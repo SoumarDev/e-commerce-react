@@ -22,8 +22,7 @@ The catalogue has 144 products in 12 categories.
 
 ### What is still missing
 
-- The dropdowns in the main menu. Right now there are only the 14 top-level items, and only "Objektive" and "Ferngläser" lead to products. All 12 categories are reachable through the cards on the home page.
-- The burger menu for small screens. The button is there but does nothing yet.
+- Most links in the main menu do not lead anywhere yet. The catalogue only covers cameras, lenses, accessories and binoculars, so entries like "Stative" or "Speicher" have no products behind them. All 12 categories are reachable through the menu or the cards on the home page.
 - Login, newsletter and "Zur Kasse" (checkout) are interface only. A backend with PHP and MySQL will follow later.
 
 ### Getting started
@@ -99,8 +98,7 @@ Im Katalog sind 144 Produkte in 12 Kategorien.
 
 ### Was noch fehlt
 
-- Die Dropdowns im Hauptmenü. Im Moment gibt es nur die 14 Hauptpunkte, und nur "Objektive" und "Ferngläser" führen zu Produkten. Alle 12 Kategorien erreicht man über die Karten auf der Startseite.
-- Das Burger-Menü für kleine Bildschirme. Der Button ist da, macht aber noch nichts.
+- Die meisten Links im Hauptmenü führen noch nirgendwohin. Der Katalog enthält nur Kameras, Objektive, Zubehör und Ferngläser, hinter Einträgen wie "Stative" oder "Speicher" stehen keine Produkte. Alle 12 Kategorien erreicht man über das Menü oder die Karten auf der Startseite.
 - Login, Newsletter und "Zur Kasse" sind nur Oberfläche. Dahinter kommt später ein Backend mit PHP und MySQL.
 
 ### Starten

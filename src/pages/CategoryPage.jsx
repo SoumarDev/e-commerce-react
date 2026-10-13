@@ -30,6 +30,8 @@ export default function CategoryPage() {
 
             <div className="d-flex justify-content-end mb-3">
                 <select
+                    className="form-select sort-select"
+                    aria-label="Sortierung wählen"
                     value={sortOrder}
                     onChange={e => setSortOrder(e.target.value)}
                 >

@@ -28,6 +28,9 @@ export default function CartItem({ item }) {
                     <span className="dealDiscount">Dealrabatt: {formatPrice(discountAmount)}</span>
                 </div>
             </div>
+            <button className="from-cart-dlt-btn" onClick={() => removeFromCart(item.id)} aria-label="Entfernen">
+                <FontAwesomeIcon icon={faTrashCan} />
+            </button>
             <div className="product-price-box">
                 <span className="piece-price">Stückpreis: {formatPrice(priceBeforeDiscount)}</span>
                 <div className="cart-action">
@@ -39,9 +42,6 @@ export default function CartItem({ item }) {
                     />
                 </div>
                 <span className="article-price">{formatPrice(lineTotal)}</span>
-                <button className="from-cart-dlt-btn" onClick={() => removeFromCart(item.id)} aria-label="Entfernen">
-                    <FontAwesomeIcon icon={faTrashCan} />
-                </button>
             </div>
         </div>
     )
