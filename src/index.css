@@ -76,21 +76,84 @@ header .logo {
   text-decoration: none;
   color: var(--body-10);
 }
+header .logo h1 {
+  font-size: var(--fs-label);
+  text-transform: uppercase;
+  margin: 0;
+}
 header .logo img {
-  height: 80px;
-  width: auto;
+  width: 50px;
   border-radius: 50%;
   border: 3px solid rgb(255, 102, 0);
 }
+@media (min-width: 990px) {
+  header .logo h1 {
+    font-size: var(--fs-title);
+  }
+  header .logo img {
+    width: 70px;
+  }
+}
 /* Header: Icons (Filialen/Warenkorb/Anmelden/Burger) */
+header .header-icons {
+  height: 70px;
+  gap: 15px;
+}
 header .header-icons a {
   color: var(--body-10);
   font-size: var(--fs-label);
+}
+header .header-icons svg {
+  font-size: calc(var(--fs-icon) + 3px);
+  color: var(--body-30);
+}
+.header-icons .icon-label {
+  display: none;
+  font-size: var(--fs-label);
+}
+.header-icons .location:hover .icon-label,
+.header-icons .user:hover .icon-label,
+.header-icons .cart:hover .icon-label,
+.header-icons .location:focus .icon-label,
+.header-icons .user:focus .icon-label,
+.header-icons .cart:focus .icon-label {
+  text-decoration: underline;
+}
+.header-icons .cart .cart-icon-wrap {
+  display: block;
+  position: relative;
+  line-height: 1;
+}
+.header-icons .cart .cart-badge {
+  display: flex;
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 20px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--primary);
+  color: var(--white);
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1;
 }
 .header-icons .bars {
   display: block;
   background-color: var(--white);
   border: none;
+}
+@media (min-width: 990px) {
+  header .header-icons {
+    gap: 30px;
+  }
+}
+@media (min-width: 1200px) {
+  .header-icons .icon-label {
+    display: block;
+  }
 }
 /* Header: Nav-Leiste / Mega-Menü Top-Level-Links */
 header .links {
@@ -261,15 +324,15 @@ header input[type="search"] {
   }
 }
 header input[type="search"] {
+  background-color: var(--white);
   height: 40px;
   padding: 6px;
   border: 1px solid var(--body-85);
   border-right: none;
   border-radius: 5px 0 0 5px;
-  outline: none;
 }
 header input[type="search"]:focus {
-  border: 2px solid var(--body-40);
+  border-color: transparent;
 }
 header .btn-search {
   height: 40px;
@@ -415,6 +478,10 @@ header .btn-search {
   .social-and-newsletter .container {
     flex-wrap: wrap;
     gap: 50px;
+  }
+  .social-content,
+  .newsletter-content {
+    width: 100%;
   }
 }
 /* Login */

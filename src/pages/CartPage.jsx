@@ -3,12 +3,15 @@ import { Link } from "react-router-dom"
 import { useCart } from "../context/CartContext"
 import CartItem from "../components/cart/CartItem"
 import CartSummary from "../components/cart/CartSummary"
+import Newsletter from "../components/home/Newsletter"
 
 export default function CartPage() {
     const { cart } = useCart()
     const [premiumShipping, setPremiumShipping] = useState(false)
 
     return (
+        <>
+        
         <div className="cart-page container">
             <nav className="breadcrumb" aria-label="Breadcrumb">
                 <Link to="/">Start</Link>
@@ -43,5 +46,8 @@ export default function CartPage() {
                 </>
             )}
         </div>
+
+        <Newsletter />
+        </>
     )
 }

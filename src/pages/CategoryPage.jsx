@@ -4,6 +4,7 @@ import { getProductsByCategory } from "../data/products"
 import { categories } from "../data/categories"
 import { parsePrice } from "../utils/price"
 import ProductCard from "../components/product/ProductCard"
+import Newsletter from "../components/home/Newsletter"
 
 export default function CategoryPage() {
     const { slug } = useParams()
@@ -19,6 +20,7 @@ export default function CategoryPage() {
     })
    
     return (
+        <>
          <div className="category-content container py-4">
             <nav className="breadcrumb d-flex flex-wrap py-3" aria-label="Breadcrumb">
                 <Link to="/">Start</Link>
@@ -42,5 +44,7 @@ export default function CategoryPage() {
                 ))}
             </div>
          </div>
+        <Newsletter />
+        </>
     )
 }

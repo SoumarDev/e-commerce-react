@@ -8,6 +8,7 @@ import { getDiscountedPrice, formatPrice } from '../utils/price'
 import { useCart } from '../context/CartContext'
 import ProductGallery from '../components/product/ProductGallery'
 import QuantityPicker from '../components/product/QuantityPicker'
+import Newsletter from "../components/home/Newsletter"
 
 export default function ProductPage() {
     const { id } = useParams()
@@ -22,6 +23,8 @@ export default function ProductPage() {
     }
     
     return (
+        <>
+        
         <div className="product-content container">
             <nav className="breadcrumb" aria-label="Breadcrumb">
                 <Link to="/">Start</Link>
@@ -97,5 +100,8 @@ export default function ProductPage() {
                 </div>
             </div>
         </div>
+        
+        <Newsletter />
+        </>
     )
 }

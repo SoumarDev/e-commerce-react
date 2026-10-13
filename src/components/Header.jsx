@@ -31,6 +31,7 @@ export default function Header() {
           </div>
           <form action="" className="d-flex align-items-center">
             <input
+              className="form-control"
               type="search"
               placeholder="Pruductsuche (Bezeichnung, Model, Marke...)"
             />
@@ -38,7 +39,7 @@ export default function Header() {
               <FontAwesomeIcon icon={faMagnifyingGlass} />
             </button>
           </form>
-          <div className="header-icons d-flex align-items-center gap-3">
+          <div className="header-icons d-flex align-items-center">
             <a
               href="#location"
               className="location d-flex flex-column align-items-center gap-2"
