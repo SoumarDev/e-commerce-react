@@ -9,19 +9,22 @@ import { useCart } from '../context/CartContext'
 import ProductGallery from '../components/product/ProductGallery'
 import QuantityPicker from '../components/product/QuantityPicker'
 import Newsletter from "../components/home/Newsletter"
+import NotFoundPage from "./NotFound"
 
 export default function ProductPage() {
     const { id } = useParams()
     const product = getProductById(id)
     const [qty, setQty] = useState(1)
     const { addToCart } = useCart()
+    
+    if  (!product) return <NotFoundPage />
 
     const { priceBeforeDiscount, discountAmount, priceAfterDiscount } = getDiscountedPrice(product)
     
     function handleAddToCart() {
         addToCart(product.id, qty)
     }
-    
+
     return (
         <>
         

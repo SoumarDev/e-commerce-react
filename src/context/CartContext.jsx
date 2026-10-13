@@ -1,9 +1,18 @@
 import { createContext, useState, useEffect, useContext } from "react";
+import { getProductById } from "../data/products";
 
 export let CartContext = createContext(null)
 
 export function CartProvider({ children }) {
-    const [cart, setCart] = useState(() => JSON.parse(localStorage.getItem("kamera-shop-cart")) || []);    
+    const [cart, setCart] = useState(() => {
+        try {
+            const saved = JSON.parse(localStorage.getItem("kamera-shop-cart")) || []   
+            return saved.filter(item => getProductById(item.id))
+        } catch {
+            return []
+        }
+    })
+    
 
     useEffect(() => {
         localStorage.setItem("kamera-shop-cart", JSON.stringify(cart));
