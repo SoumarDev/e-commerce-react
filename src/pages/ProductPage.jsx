@@ -1,9 +1,9 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Link, useParams } from "react-router-dom"
 import { categories } from "../data/categories"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartShopping, faStar, faStarHalfStroke, faHeart, faCircleCheck, faDolly, faStore, faRotateLeft } from '@fortawesome/free-solid-svg-icons'
-import { getProductById } from "../data/products"
+import { fetchProductById } from "../api/products"
 import { getDiscountedPrice, formatPrice } from '../utils/price'
 import { useCart } from '../context/CartContext'
 import ProductGallery from '../components/product/ProductGallery'
@@ -13,11 +13,35 @@ import NotFoundPage from "./NotFound"
 
 export default function ProductPage() {
     const { id } = useParams()
-    const product = getProductById(id)
-    const [qty, setQty] = useState(1)
+    // product: undefined = lädt noch, null = nicht gefunden (404), Objekt = geladen
+    const [ product, setProduct ]= useState(undefined)
+    const [ error, setError ] = useState(false)
+    const [ qty, setQty ] = useState(1)
     const { addToCart } = useCart()
-    
-    if  (!product) return <NotFoundPage />
+
+    // Produkt beim ersten Rendern und bei jedem Wechsel der id aus der API laden
+    useEffect(() => {
+        // Verhindert, dass eine alte Antwort die neue Seite überschreibt,
+        // wenn der Nutzer schnell zu einem anderen Produkt wechselt
+        let ignore = false
+        fetchProductById(id)
+            .then(data => {
+                if (!ignore) {
+                    setProduct(data)
+                    setError(false)
+                }
+            })
+            .catch(() => {
+                if (!ignore) setError(true)
+            })
+        // Aufräumfunktion: läuft beim Verlassen der Seite bzw. vor dem nächsten Laden
+        return () => { ignore = true }
+    }, [id])
+
+    // Zustände vor dem eigentlichen Rendern abfangen
+    if (error) return <p className="container py-5">Das Produkt konnte nicht geladen werden.</p>
+    if (product === undefined) return <p className="container py-5">Lädt ...</p>
+    if (product === null) return <NotFoundPage />
 
     const { priceBeforeDiscount, discountAmount, priceAfterDiscount } = getDiscountedPrice(product)
     
