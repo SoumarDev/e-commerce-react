@@ -1,6 +1,6 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useParams, Link } from "react-router-dom"
-import { getProductsByCategory } from "../data/products"
+import { fetchProductsByCategory } from "../api/products"
 import { categories } from "../data/categories"
 import { parsePrice } from "../utils/price"
 import ProductCard from "../components/product/ProductCard"
@@ -8,9 +8,30 @@ import Newsletter from "../components/home/Newsletter"
 
 export default function CategoryPage() {
     const { slug } = useParams()
-    const products = getProductsByCategory(slug)
-    const [sortOrder, setSortOrder] = useState('asc')
-     
+    // products: undefined = lädt noch, Array = geladen (kann leer sein)
+    const [ products, setProducts ] = useState(undefined)
+    const [ error, setError ] = useState(false)
+    const [ sortOrder, setSortOrder ] = useState('asc')
+    
+    // Produkte der Kategorie beim ersten Rendern und bei jedem Wechsel des slug laden
+    useEffect(() => {
+        let ignore = false
+        fetchProductsByCategory(slug)
+            .then(data => {
+                if (!ignore) {
+                    setProducts(data)
+                    setError(false)
+                }
+            })
+            .catch(() => {
+                if (!ignore) setError(true)
+            })
+        return () => { ignore = true }
+    }, [slug])
+
+    if (error) return <p className="container py-5">Die Produkte konnten nicht geladen werden.</p>
+    if (products === undefined) return <p className="container py-5">Lädt ...</p>
+
     const sortedProducts = [...products].sort((a, b) => {
         if (sortOrder == 'asc') {
             return parsePrice(a.price) - parsePrice(b.price)
