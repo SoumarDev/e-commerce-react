@@ -2,14 +2,12 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { getProductById } from "../../data/products";
 import { formatPrice, getDiscountedPrice } from "../../utils/price";
 import { useCart } from "../../context/CartContext";
 
-export default function CartItem({ item }) {
+export default function CartItem({ item, product }) {
     const { updateQty, removeFromCart } = useCart()
     const [showMore, setShowMore] = useState(false)
-    const product = getProductById(item.id)
     const { priceBeforeDiscount, discountAmount, priceAfterDiscount } = getDiscountedPrice(product)
     const lineTotal = priceAfterDiscount * item.qty
 
@@ -25,7 +23,7 @@ export default function CartItem({ item }) {
                     <button className="des-toggle" onClick={() => setShowMore(!showMore)}>
                         {showMore ? "Weniger anzeigen" : "Mehr anzeigen"}
                     </button>
-                    <span className="dealDiscount">Dealrabatt: {formatPrice(discountAmount)}</span>
+                    <span className="dealDiscount">Dealrabatt: {formatPrice(discountAmount * item.qty)}</span>
                 </div>
             </div>
             <button className="from-cart-dlt-btn" onClick={() => removeFromCart(item.id)} aria-label="Entfernen">

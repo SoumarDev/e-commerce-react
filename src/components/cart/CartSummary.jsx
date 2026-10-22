@@ -1,14 +1,10 @@
-import { useCart } from "../../context/CartContext"
-import { getProductById } from "../../data/products"
 import { formatPrice, getDiscountedPrice } from "../../utils/price"
 
 const SHIPPING_COST = 4.9
 
-export default function CartSummary({ premiumShipping }) {
-    const { cart } = useCart()
-
-    const subtotal = cart.reduce((sum, item) => {
-        const product = getProductById(item.id)
+export default function CartSummary({ items, productsById, premiumShipping }) {
+    const subtotal = items.reduce((sum, item) => {
+        const product = productsById[item.id]
         const { priceAfterDiscount } = getDiscountedPrice(product)
         return sum + priceAfterDiscount * item.qty
     }, 0)
