@@ -1,4 +1,4 @@
-import { products } from "../src/data/products.js";
+import { products } from "./products.js";
 import { categories } from "../src/data/categories.js";
 import fs from "node:fs";
 
