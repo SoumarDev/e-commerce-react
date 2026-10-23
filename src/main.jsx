@@ -9,6 +9,7 @@ import ProductPage from './pages/ProductPage.jsx'
 import CategoryPage from './pages/CategoryPage.jsx'
 import CartPage from './pages/CartPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
+import RegisterPage from './pages/RegisterPage.jsx'
 import NotFoundPage from './pages/NotFound.jsx'
 import { CartProvider } from './context/CartContext.jsx'
 import ScrollToTop from './components/ScrollToTop.jsx'
@@ -25,7 +26,8 @@ createRoot(document.getElementById('root')).render(
             <Route path="kategorie/:slug" element={<CategoryPage />} /> 
             <Route path="produkt/:id" element={<ProductPage />} /> 
             <Route path="warenkorb" element={<CartPage />} /> 
-            <Route path="login" element={<LoginPage />} /> 
+            <Route path="login" element={<LoginPage />} />
+            <Route path="registrieren" element={<RegisterPage />}/> 
             <Route path="*" element={<NotFoundPage />} /> 
           </Route>
         </Routes>

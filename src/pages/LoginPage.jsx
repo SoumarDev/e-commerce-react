@@ -1,9 +1,10 @@
+import { Link } from "react-router-dom";
+
 export default function LoginPage() {
   return (
     <div className="login-content text-center p-3 rounded-2">
       <h1>Anmelden</h1>
       <form
-        action="login.php"
         className="login-form d-flex flex-column gap-3"
         onSubmit={(e) => e.preventDefault()}
       >
@@ -45,12 +46,10 @@ export default function LoginPage() {
           Anmelden
         </button>
       </form>
-      <a
-        href="#"
-        className="text-primary text-decoration-underline d-inline-block mt-3"
-      >
-        Neu bei Kamera Shop? Jetzt registrieren
-      </a>
+
+      <Link to="/registrieren" className="text-primary text-decoration-underline d-inline-block mt-3">
+          Neu bei Kamera Shop? Jetzt registrieren
+      </Link>
     </div>
   );
 }
