@@ -13,21 +13,36 @@ This is a learning project. You cannot buy anything, and the products, prices an
 ### What works
 
 - Home page with image carousel, categories, brands and recommended products
-- Category pages with sorting by price
+- Category pages with sorting by price. Unknown and empty categories show a hint.
 - Product page with image gallery, discount price and quantity picker
-- Cart: change quantity, remove items, add premium shipping. The contents survive a reload (localStorage).
+- Cart: change quantity, remove items, add premium shipping. The contents survive a reload (localStorage), the product data is loaded from the API.
 - Login form and 404 page
 
-The catalogue has 144 products in 12 categories.
+The catalogue has 144 products in 12 categories. It lives in a MySQL database and is read through a small PHP API.
 
 ### What is still missing
 
 - Most links in the main menu do not lead anywhere yet. The catalogue only covers cameras, lenses, accessories and binoculars, so entries like "Stative" or "Speicher" have no products behind them. All 12 categories are reachable through the menu or the cards on the home page.
-- Login, newsletter and "Zur Kasse" (checkout) are interface only. A backend with PHP and MySQL will follow later.
+- Login, newsletter and "Zur Kasse" (checkout) are interface only. The backend can only read products so far. The database already has tables for customers, orders and deliveries, but nothing writes to them yet. Registration, login and saving orders are the next step.
 
 ### Getting started
 
-You need Node.js.
+You need Node.js and [XAMPP](https://www.apachefriends.org/) (Apache, MySQL/MariaDB and PHP 8).
+
+**1. Database**
+
+1. Start Apache and MySQL in the XAMPP control panel.
+2. In phpMyAdmin create a database `kamera_shop` (collation `utf8mb4_unicode_ci`).
+3. Select it and import the files from `database/`: first all `kamera_shop_table_*.sql`, then `kamera_shop_extra.sql` (indexes, auto increment, foreign keys).
+4. Import `import.sql`. It contains the 12 categories, 144 products, their images and features.
+
+**2. API**
+
+Copy the `api/` folder to `C:\xampp\htdocs\kamera-shop-api\`. Then `http://localhost/kamera-shop-api/products.php` should show the products as JSON.
+
+**3. Frontend**
+
+The file `.env` tells the shop where the API lives. Change it if your folder has a different name.
 
 ```bash
 npm install
@@ -51,21 +66,28 @@ npm run lint     # ESLint
 - Bootstrap 5 for layout and forms, custom CSS wherever Bootstrap is not precise enough
 - Font Awesome for the icons
 - Context API for the cart
+- PHP 8 with PDO and MySQL (MariaDB), run locally with XAMPP
+- `fetch` for the communication, JSON as the format
 
 ### Structure
 
 ```
 src/
+  api/          fetch functions for the PHP API
   components/   header, footer, product card, gallery, cart rows ...
   context/      cart (CartContext)
-  data/         products, categories, menu items
+  data/         categories, menu items
   hooks/        useVisibleCount for the recommendations slider
   pages/        one file per page
   utils/        parsing and formatting prices
+api/            PHP endpoints (product.php, products.php, category.php)
+database/       table structure (CREATE TABLE exports)
+scripts/        import script and the original sample data
+import.sql      generated data for the database
 public/images/  all product images
 ```
 
-The pages never touch the product array directly. They only use the functions in `src/data/products.js` (`getAllProducts`, `getProductById`, `getProductsByCategory`). Once the backend exists, I only have to rewrite those three functions.
+The pages never talk to the server directly. They only use the functions in `src/api/products.js` (`fetchProductById`, `fetchProductsByCategory`, `fetchAllProducts`). Those send a request to the PHP API, which reads MySQL with prepared statements and answers with JSON in the shape the components already know. `scripts/import-products.js` builds `import.sql` from the sample data in `scripts/products.js`.
 
 ### What I learned
 
@@ -75,6 +97,11 @@ A few things I tripped over:
 - The carousel timer has to be cleaned up in `useEffect`, otherwise it keeps running after you leave the page.
 - State must not be changed directly. That is why the cart always builds a new array.
 - Bootstrap's utility classes are `!important` and override my own hover rules. In some places custom CSS was the simpler solution.
+- Data from a server arrives later. A page needs three states (loading, error, loaded), and the `useEffect` that fetches has to be cleaned up, otherwise an old answer can overwrite a newer page.
+- The cart only stores ids and quantities. The cart page loads the products once and passes them down as props.
+- The browser blocks answers from another origin (CORS) unless the PHP side allows it explicitly.
+- Values that come from the URL never go into the SQL string. Prepared statements keep them apart.
+- A typo in a column or variable name cost me more time than any concept.
 
 ---
 
@@ -89,21 +116,36 @@ Es ist ein Lernprojekt. Man kann nichts kaufen, und die Produkte, Preise und Rab
 ### Was funktioniert
 
 - Startseite mit Bild-Carousel, Kategorien, Marken und Produktempfehlungen
-- Kategorieseiten mit Sortierung nach Preis
+- Kategorieseiten mit Sortierung nach Preis. Unbekannte und leere Kategorien zeigen einen Hinweis.
 - Produktseite mit Bildergalerie, Rabattpreis und Mengenwahl
-- Warenkorb: Menge ändern, Artikel entfernen, Premiumversand zubuchen. Der Inhalt bleibt nach dem Neuladen erhalten (localStorage).
+- Warenkorb: Menge ändern, Artikel entfernen, Premiumversand zubuchen. Der Inhalt bleibt nach dem Neuladen erhalten (localStorage), die Produktdaten werden aus der API geladen.
 - Login-Formular und 404-Seite
 
-Im Katalog sind 144 Produkte in 12 Kategorien.
+Im Katalog sind 144 Produkte in 12 Kategorien. Sie liegen in einer MySQL-Datenbank und werden über eine kleine PHP-API gelesen.
 
 ### Was noch fehlt
 
 - Die meisten Links im Hauptmenü führen noch nirgendwohin. Der Katalog enthält nur Kameras, Objektive, Zubehör und Ferngläser, hinter Einträgen wie "Stative" oder "Speicher" stehen keine Produkte. Alle 12 Kategorien erreicht man über das Menü oder die Karten auf der Startseite.
-- Login, Newsletter und "Zur Kasse" sind nur Oberfläche. Dahinter kommt später ein Backend mit PHP und MySQL.
+- Login, Newsletter und "Zur Kasse" sind nur Oberfläche. Das Backend kann bisher nur Produkte lesen. In der Datenbank gibt es schon Tabellen für Kunden, Bestellungen und Lieferungen, aber nichts schreibt dort hinein. Registrierung, Login und das Speichern von Bestellungen sind der nächste Schritt.
 
 ### Starten
 
-Voraussetzung ist Node.js.
+Voraussetzung sind Node.js und [XAMPP](https://www.apachefriends.org/) (Apache, MySQL/MariaDB und PHP 8).
+
+**1. Datenbank**
+
+1. Apache und MySQL im XAMPP Control Panel starten.
+2. In phpMyAdmin eine Datenbank `kamera_shop` anlegen (Kollation `utf8mb4_unicode_ci`).
+3. Sie auswählen und die Dateien aus `database/` importieren: zuerst alle `kamera_shop_table_*.sql`, dann `kamera_shop_extra.sql` (Indizes, Auto-Increment, Fremdschlüssel).
+4. `import.sql` importieren. Sie enthält die 12 Kategorien, 144 Produkte, ihre Bilder und Merkmale.
+
+**2. API**
+
+Den Ordner `api/` nach `C:\xampp\htdocs\kamera-shop-api\` kopieren. Danach sollte `http://localhost/kamera-shop-api/products.php` die Produkte als JSON anzeigen.
+
+**3. Frontend**
+
+Die Datei `.env` sagt dem Shop, wo die API liegt. Sie muss angepasst werden, wenn der Ordner anders heißt.
 
 ```bash
 npm install
@@ -127,21 +169,28 @@ npm run lint     # ESLint
 - Bootstrap 5 für Layout und Formulare, eigenes CSS für alles, was Bootstrap nicht genau genug trifft
 - Font Awesome für die Icons
 - Context API für den Warenkorb
+- PHP 8 mit PDO und MySQL (MariaDB), lokal mit XAMPP
+- `fetch` für die Kommunikation, JSON als Format
 
 ### Aufbau
 
 ```
 src/
+  api/          fetch-Funktionen für die PHP-API
   components/   Header, Footer, Produktkarte, Galerie, Warenkorb-Zeilen ...
   context/      Warenkorb (CartContext)
-  data/         Produkte, Kategorien, Menüpunkte
+  data/         Kategorien, Menüpunkte
   hooks/        useVisibleCount für den Empfehlungs-Slider
   pages/        eine Datei pro Seite
   utils/        Preise umrechnen und formatieren
+api/            PHP-Endpunkte (product.php, products.php, category.php)
+database/       Tabellenstruktur (CREATE-TABLE-Exporte)
+scripts/        Import-Skript und die ursprünglichen Beispieldaten
+import.sql      erzeugte Daten für die Datenbank
 public/images/  alle Produktbilder
 ```
 
-Die Seiten greifen nie direkt auf das Produkt-Array zu, sondern nur über die Funktionen in `src/data/products.js` (`getAllProducts`, `getProductById`, `getProductsByCategory`). Wenn das Backend da ist, muss ich nur diese drei Funktionen umbauen.
+Die Seiten sprechen nie direkt mit dem Server, sondern nur über die Funktionen in `src/api/products.js` (`fetchProductById`, `fetchProductsByCategory`, `fetchAllProducts`). Sie schicken eine Anfrage an die PHP-API, die MySQL mit Prepared Statements ausliest und mit JSON in der Form antwortet, die die Komponenten schon kennen. `scripts/import-products.js` baut `import.sql` aus den Beispieldaten in `scripts/products.js`.
 
 ### Was ich dabei gelernt habe
 
@@ -151,3 +200,8 @@ Ein paar Dinge, über die ich gestolpert bin:
 - Der Timer im Carousel muss im `useEffect` wieder aufgeräumt werden, sonst läuft er weiter, wenn man die Seite verlässt.
 - State darf man nicht direkt verändern. Im Warenkorb wird deshalb immer ein neues Array gebaut.
 - Die Hilfsklassen von Bootstrap sind `!important` und überschreiben eigene Hover-Regeln. An einigen Stellen war eigenes CSS die einfachere Lösung.
+- Daten vom Server kommen später an. Eine Seite braucht drei Zustände (lädt, Fehler, geladen), und das `useEffect`, das lädt, muss aufgeräumt werden, sonst kann eine alte Antwort eine neuere Seite überschreiben.
+- Der Warenkorb speichert nur IDs und Mengen. Die Warenkorb-Seite lädt die Produkte einmal und gibt sie als Props weiter.
+- Der Browser blockiert Antworten von einem anderen Ursprung (CORS), solange die PHP-Seite sie nicht ausdrücklich erlaubt.
+- Werte aus der URL kommen nie in den SQL-String. Prepared Statements halten sie getrennt.
+- Ein Tippfehler in einem Spalten- oder Variablennamen hat mich mehr Zeit gekostet als jedes Konzept.
