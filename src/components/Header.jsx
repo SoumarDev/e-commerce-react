@@ -75,7 +75,7 @@ export default function Header() {
           </div>
         </div>
 
-        <MegaMenu open={menuOpen}/>
+        <MegaMenu open={menuOpen} onNavigate={() => setMenuOpen(false)}/>
       </header>
     </>
   );

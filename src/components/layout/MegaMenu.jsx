@@ -2,9 +2,12 @@ import { megaMenu } from "../../data/megaMenu";
 import { Link } from "react-router-dom"
 import  MegaMenuColumn  from "./MegaMenuColumn"
 
-export default function MegaMenu ({ open }) {
+export default function MegaMenu ({ open, onNavigate }) {
     return (
-        <nav className={open ? "links open" : "links"}>
+        <nav className={open ? "links open" : "links"}
+             onClick={e => { if (e.target.closest("a")) onNavigate() }}
+        >
+
             <ul>
                 {megaMenu.map(entry => (
                     <li key={entry.slug} className={entry.slug}>
