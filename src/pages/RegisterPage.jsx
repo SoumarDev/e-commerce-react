@@ -77,7 +77,7 @@ export default function RegisterPage() {
           <input
             className="form-control"
             type="password"
-            name="passwordRepat"
+            name="passwordRepeat"
             id="passwordRepeat"
             placeholder="Passwort wiederholen"
             autoComplete="new-password"
