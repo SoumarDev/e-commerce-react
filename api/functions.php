@@ -64,3 +64,33 @@ function buildProduct($pdo, $row) {
 
     return $result;
 }
+
+/**
+ * Holt die öffentliche Daten eines Benutzers( nie den Passwort-Hash).
+ * 
+ * @param PDO         $pdo      Datenbankverbindung
+ * @param string      $username E-Mail-Addresse des Benutzers
+ * @return array|null email, vorname, nachname, rolle, oder null, wenn es den Benutzer nicht gibt
+ */
+
+function getUser($pdo, $username) {
+    $stmt = $pdo->prepare("
+        SELECT b.Username, b.Rolle, k.Vorname, k.Nachname 
+        FROM Benutzer b
+        LEFT JOIN Kunde k ON k.Username = b.Username
+        WHERE b.Username = ?
+    ");
+    $stmt->execute([$username]);
+    $row = $stmt->fetch();
+
+    if (!$row) {
+        return null;
+    }
+
+    return [
+        "email" => $row["Username"],
+        "vorname" => $row["Vorname"],
+        "nachname" => $row["Nachname"],
+        "rolle" => $row["Rolle"],
+    ];
+}
