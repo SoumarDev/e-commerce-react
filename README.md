@@ -16,14 +16,14 @@ This is a learning project. You cannot buy anything, and the products, prices an
 - Category pages with sorting by price. Unknown and empty categories show a hint.
 - Product page with image gallery, discount price and quantity picker
 - Cart: change quantity, remove items, add premium shipping. The contents survive a reload (localStorage), the product data is loaded from the API.
-- Login form and 404 page
+- Login form, registration form and 404 page
 
 The catalogue has 144 products in 12 categories. It lives in a MySQL database and is read through a small PHP API.
 
 ### What is still missing
 
 - Most links in the main menu do not lead anywhere yet. The catalogue only covers cameras, lenses, accessories and binoculars, so entries like "Stative" or "Speicher" have no products behind them. All 12 categories are reachable through the menu or the cards on the home page.
-- Login, newsletter and "Zur Kasse" (checkout) are interface only. The backend can only read products so far. The database already has tables for customers, orders and deliveries, but nothing writes to them yet. Registration, login and saving orders are the next step.
+- Login, registration, newsletter and "Zur Kasse" (checkout) are not connected in the shop yet. The backend already has endpoints for registration, login, logout and for asking who is logged in. The forms in the shop do not call them yet. Saving orders and the newsletter are still missing, the database already has tables for orders and deliveries, but nothing writes to them.
 
 ### Getting started
 
@@ -65,8 +65,9 @@ npm run lint     # ESLint
 - React Router for the pages
 - Bootstrap 5 for layout and forms, custom CSS wherever Bootstrap is not precise enough
 - Font Awesome for the icons
-- Context API for the cart
+- Context API for the cart and for the login state
 - PHP 8 with PDO and MySQL (MariaDB), run locally with XAMPP
+- PHP sessions (cookie) for the login, passwords stored as hashes
 - `fetch` for the communication, JSON as the format
 
 ### Structure
@@ -75,12 +76,12 @@ npm run lint     # ESLint
 src/
   api/          fetch functions for the PHP API
   components/   header, footer, product card, gallery, cart rows ...
-  context/      cart (CartContext)
+  context/      cart (CartContext), login state (AuthContext, AuthProvider)
   data/         categories, menu items
-  hooks/        useVisibleCount for the recommendations slider
+  hooks/        useVisibleCount for the recommendations slider, useAuth for the login state
   pages/        one file per page
   utils/        parsing and formatting prices
-api/            PHP endpoints (product.php, products.php, category.php)
+api/            PHP endpoints (products, category, register, login, logout, me)
 database/       table structure (CREATE TABLE exports)
 scripts/        import script and the original sample data
 import.sql      generated data for the database
@@ -88,6 +89,8 @@ public/images/  all product images
 ```
 
 The pages never talk to the server directly. They only use the functions in `src/api/products.js` (`fetchProductById`, `fetchProductsByCategory`, `fetchAllProducts`). Those send a request to the PHP API, which reads MySQL with prepared statements and answers with JSON in the shape the components already know. `scripts/import-products.js` builds `import.sql` from the sample data in `scripts/products.js`.
+
+The login works with a PHP session. After a successful login the browser gets a cookie that only holds the session id, the user itself stays on the server. `register.php` checks the input again on the server, saves the password with `password_hash` and creates the user and the customer in one transaction.
 
 ### What I learned
 
@@ -102,6 +105,9 @@ A few things I tripped over:
 - The browser blocks answers from another origin (CORS) unless the PHP side allows it explicitly.
 - Values that come from the URL never go into the SQL string. Prepared statements keep them apart.
 - A typo in a column or variable name cost me more time than any concept.
+- What the browser checks in a form (`required`, `minLength`) can be bypassed. The server has to check the input again.
+- A cookie only holds a number. The session with the user stays on the server, and after the login the session id has to be renewed.
+- If PHP crashes before it sends the CORS headers, the browser shows a CORS error although the real problem is a typo in the PHP file.
 
 ---
 
@@ -119,14 +125,14 @@ Es ist ein Lernprojekt. Man kann nichts kaufen, und die Produkte, Preise und Rab
 - Kategorieseiten mit Sortierung nach Preis. Unbekannte und leere Kategorien zeigen einen Hinweis.
 - Produktseite mit Bildergalerie, Rabattpreis und Mengenwahl
 - Warenkorb: Menge ändern, Artikel entfernen, Premiumversand zubuchen. Der Inhalt bleibt nach dem Neuladen erhalten (localStorage), die Produktdaten werden aus der API geladen.
-- Login-Formular und 404-Seite
+- Login-Formular, Registrierungsformular und 404-Seite
 
 Im Katalog sind 144 Produkte in 12 Kategorien. Sie liegen in einer MySQL-Datenbank und werden über eine kleine PHP-API gelesen.
 
 ### Was noch fehlt
 
 - Die meisten Links im Hauptmenü führen noch nirgendwohin. Der Katalog enthält nur Kameras, Objektive, Zubehör und Ferngläser, hinter Einträgen wie "Stative" oder "Speicher" stehen keine Produkte. Alle 12 Kategorien erreicht man über das Menü oder die Karten auf der Startseite.
-- Login, Newsletter und "Zur Kasse" sind nur Oberfläche. Das Backend kann bisher nur Produkte lesen. In der Datenbank gibt es schon Tabellen für Kunden, Bestellungen und Lieferungen, aber nichts schreibt dort hinein. Registrierung, Login und das Speichern von Bestellungen sind der nächste Schritt.
+- Login, Registrierung, Newsletter und "Zur Kasse" sind im Shop noch nicht angebunden. Das Backend hat schon Endpunkte für Registrierung, Login, Logout und für die Frage, wer gerade angemeldet ist. Die Formulare im Shop rufen sie noch nicht auf. Das Speichern von Bestellungen und der Newsletter fehlen noch, in der Datenbank gibt es schon Tabellen für Bestellungen und Lieferungen, aber nichts schreibt dort hinein.
 
 ### Starten
 
@@ -168,8 +174,9 @@ npm run lint     # ESLint
 - React Router für die Seiten
 - Bootstrap 5 für Layout und Formulare, eigenes CSS für alles, was Bootstrap nicht genau genug trifft
 - Font Awesome für die Icons
-- Context API für den Warenkorb
+- Context API für den Warenkorb und den Anmeldestatus
 - PHP 8 mit PDO und MySQL (MariaDB), lokal mit XAMPP
+- PHP-Sessions (Cookie) für den Login, Passwörter nur als Hash gespeichert
 - `fetch` für die Kommunikation, JSON als Format
 
 ### Aufbau
@@ -178,12 +185,12 @@ npm run lint     # ESLint
 src/
   api/          fetch-Funktionen für die PHP-API
   components/   Header, Footer, Produktkarte, Galerie, Warenkorb-Zeilen ...
-  context/      Warenkorb (CartContext)
+  context/      Warenkorb (CartContext), Anmeldestatus (AuthContext, AuthProvider)
   data/         Kategorien, Menüpunkte
-  hooks/        useVisibleCount für den Empfehlungs-Slider
+  hooks/        useVisibleCount für den Empfehlungs-Slider, useAuth für den Anmeldestatus
   pages/        eine Datei pro Seite
   utils/        Preise umrechnen und formatieren
-api/            PHP-Endpunkte (product.php, products.php, category.php)
+api/            PHP-Endpunkte (Produkte, Kategorie, Registrierung, Login, Logout, me)
 database/       Tabellenstruktur (CREATE-TABLE-Exporte)
 scripts/        Import-Skript und die ursprünglichen Beispieldaten
 import.sql      erzeugte Daten für die Datenbank
@@ -191,6 +198,8 @@ public/images/  alle Produktbilder
 ```
 
 Die Seiten sprechen nie direkt mit dem Server, sondern nur über die Funktionen in `src/api/products.js` (`fetchProductById`, `fetchProductsByCategory`, `fetchAllProducts`). Sie schicken eine Anfrage an die PHP-API, die MySQL mit Prepared Statements ausliest und mit JSON in der Form antwortet, die die Komponenten schon kennen. `scripts/import-products.js` baut `import.sql` aus den Beispieldaten in `scripts/products.js`.
+
+Der Login arbeitet mit einer PHP-Session. Nach einem erfolgreichen Login bekommt der Browser ein Cookie, das nur die Session-ID enthält, der Benutzer selbst bleibt auf dem Server. `register.php` prüft die Eingaben noch einmal auf dem Server, speichert das Passwort mit `password_hash` und legt Benutzer und Kunde in einer Transaktion an.
 
 ### Was ich dabei gelernt habe
 
@@ -205,3 +214,6 @@ Ein paar Dinge, über die ich gestolpert bin:
 - Der Browser blockiert Antworten von einem anderen Ursprung (CORS), solange die PHP-Seite sie nicht ausdrücklich erlaubt.
 - Werte aus der URL kommen nie in den SQL-String. Prepared Statements halten sie getrennt.
 - Ein Tippfehler in einem Spalten- oder Variablennamen hat mich mehr Zeit gekostet als jedes Konzept.
+- Was der Browser in einem Formular prüft (`required`, `minLength`), lässt sich umgehen. Der Server muss die Eingaben noch einmal prüfen.
+- Ein Cookie enthält nur eine Nummer. Die Session mit dem Benutzer bleibt auf dem Server, und nach dem Login muss die Session-ID erneuert werden.
+- Stürzt PHP ab, bevor es die CORS-Header sendet, zeigt der Browser einen CORS-Fehler, obwohl in Wirklichkeit ein Tippfehler in der PHP-Datei steckt.
