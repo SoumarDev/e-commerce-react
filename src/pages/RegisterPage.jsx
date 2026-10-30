@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "../hooks/useAuth";
 
 function validateRegister(values) {
   const errors = {};
@@ -57,16 +58,44 @@ export default function RegisterPage() {
   })
   const [errors, setErrors] = useState({});
 
+  const { register } = useAuth();
+  const navigate = useNavigate();
+  const [serverError, setServerError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+
   function handleChange(e) {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value}); 
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    setServerError("");
+    
     const found = validateRegister(values);
     setErrors(found);
     if (Object.keys(found).length > 0) return;
+
+    setLoading(true);
+
+    try {
+      const result = await register(values.vorname, values.nachname,
+                                    values.email, values.password)
+      if (result.ok) {
+        navigate("/login");
+      } else if (result.status === 409) {
+        // Meldung in den errors-State, damit sie unter dem E-Mail-Feld erscheint:
+        setErrors({email: "Diese E-Mail-Adresse ist schon registriert."})
+      } else if (result.status === 422) {
+        setServerError("Die Eingaben wurden vom Server abgelehnt. Bitte prüfen Sie sie.")
+      } else {
+        setServerError("Die Registrierung ist fehlgeschlagen. Bitte versuchen Sie es erneut.")
+      }
+    } catch {
+      setServerError("Der Server ist nicht erreichbar. Bitte versuchen Sie es später erneut.")
+    }
+    setLoading(false);
   }
 
   return (
@@ -171,8 +200,14 @@ export default function RegisterPage() {
           )}
         </div>
 
-        <button type="submit" className="btn btn-primary submit-btn">
-          Registrieren
+        {serverError && (
+          <div className="alert alert-danger py-2" role="alert">
+            {serverError}
+          </div>
+        )}
+
+        <button type="submit" className="btn btn-primary submit-btn" disabled={loading}>
+          {loading ? "Bitte warten ..." : "Registrieren" }
         </button>
       </form>
       <Link to="/login" className="text-primary text-decoration-underline d-inline-block mt-3">
