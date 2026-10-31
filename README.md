@@ -92,7 +92,7 @@ public/images/  all product images
 
 The pages never talk to the server directly. They only use the functions in `src/api/products.js` (`fetchProductById`, `fetchProductsByCategory`, `fetchAllProducts`). Those send a request to the PHP API, which reads MySQL with prepared statements and answers with JSON in the shape the components already know. `scripts/import-products.js` builds `import.sql` from the sample data in `scripts/products.js`.
 
-The login works with a PHP session. After a successful login the browser gets a cookie that only holds the session id, the user itself stays on the server. `register.php` checks the input again on the server, saves the password with `password_hash` and creates the user and the customer in one transaction.
+The login works with a PHP session. After a successful login the browser gets a cookie that only holds the session id, the user itself stays on the server. `register.php` checks the input again on the server (including the password strength: lowercase, uppercase, digit and special character), saves the password with `password_hash` and creates the user and the customer in one transaction.
 
 ### What I learned
 
@@ -205,7 +205,7 @@ public/images/  alle Produktbilder
 
 Die Seiten sprechen nie direkt mit dem Server, sondern nur über die Funktionen in `src/api/products.js` (`fetchProductById`, `fetchProductsByCategory`, `fetchAllProducts`). Sie schicken eine Anfrage an die PHP-API, die MySQL mit Prepared Statements ausliest und mit JSON in der Form antwortet, die die Komponenten schon kennen. `scripts/import-products.js` baut `import.sql` aus den Beispieldaten in `scripts/products.js`.
 
-Der Login arbeitet mit einer PHP-Session. Nach einem erfolgreichen Login bekommt der Browser ein Cookie, das nur die Session-ID enthält, der Benutzer selbst bleibt auf dem Server. `register.php` prüft die Eingaben noch einmal auf dem Server, speichert das Passwort mit `password_hash` und legt Benutzer und Kunde in einer Transaktion an.
+Der Login arbeitet mit einer PHP-Session. Nach einem erfolgreichen Login bekommt der Browser ein Cookie, das nur die Session-ID enthält, der Benutzer selbst bleibt auf dem Server. `register.php` prüft die Eingaben noch einmal auf dem Server (auch die Passwortstärke: Klein-, Großbuchstabe, Ziffer und Sonderzeichen), speichert das Passwort mit `password_hash` und legt Benutzer und Kunde in einer Transaktion an.
 
 ### Was ich dabei gelernt habe
 
