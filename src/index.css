@@ -103,6 +103,11 @@ header .header-icons a {
   color: var(--body-10);
   font-size: var(--fs-label);
 }
+/* Der Abmelden-Knopf soll wie die Links aussehen */
+header .header-icons button.user {
+  color: var(--body-10);
+  font-size: var(--fs-label);
+}
 header .header-icons svg {
   font-size: calc(var(--fs-icon) + 3px);
   color: var(--body-30);

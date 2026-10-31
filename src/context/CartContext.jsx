@@ -54,8 +54,13 @@ export function CartProvider({ children }) {
         )
     }
 
+    // Nach der Abmeldung den Warenkorb leeren
+    function clearCart() {
+        setCart([]);
+    }
+
     return (
-        <CartContext.Provider value={{cart, addToCart, updateQty, removeFromCart}}>
+        <CartContext.Provider value={{cart, addToCart, updateQty, removeFromCart, clearCart}}>
             {children}
         </CartContext.Provider>
 )

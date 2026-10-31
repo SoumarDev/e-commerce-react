@@ -6,15 +6,25 @@ import {
   faUser,
   faBars,
 } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import MegaMenu from "./layout/MegaMenu";
 import { useState } from "react";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Header() {
-  const { cart } = useCart();
+  const { cart, clearCart } = useCart();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  async function handleLogout() {
+    await logout();
+    clearCart();
+    navigate("/");  
+  }
+
 
   return (
     <>
@@ -55,15 +65,27 @@ export default function Header() {
                 <FontAwesomeIcon icon={faCartShopping} />
                 <span className="cart-badge">{totalQty}</span>
               </span>
-              <span className="icon-label">Warenkorp</span>
+              <span className="icon-label">Warenkorb</span>
             </Link>
-            <Link
-              to="/login"
-              className="user d-flex flex-column align-items-center gap-2"
-            >
-              <FontAwesomeIcon icon={faUser} />
-              <span className="icon-label">Anmelden</span>
-            </Link>
+            {user === undefined ? null : user ? (
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="user d-flex flex-column align-items-center gap-2 border-0 bg-transparent"
+              >
+                <FontAwesomeIcon icon={faUser} />
+                <span className="icon-label">Abmelden</span> 
+              </button>
+            ) : (
+              <Link 
+                to="/login"
+                className="user d-flex flex-column align-items-center gap-2"
+                > 
+                 <FontAwesomeIcon icon={faUser} />
+                 <span className="icon-label">Anmelden</span>
+              </Link>
+            )}
+            
             <button
               className="bars "
               onClick={() => setMenuOpen((open) => !open)}
