@@ -54,9 +54,21 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL) || mb_strlen($email) > 255) {
 if (mb_strlen($password) < 8) {
     $errors[] = "Das Passwort muss mindestens 8 Zeichen haben";
 }
+if (!preg_match('/[a-z]/', $password)) {
+    $errors[] = "Das Passwort braucht mindestens einen Kleinbuchstaben";
+}
+if (!preg_match('/[A-Z]/', $password)) {
+    $errors[] = "Das Passwort braucht mindestens einen Großbuchstaben";
+}
+if (!preg_match('/\d/', $password)) {
+    $errors[] = "Das Passwort braucht mindestens eine Ziffer";
+}
+if (!preg_match('/[^A-Za-z0-9\s]/', $password)) {
+    $errors[] = "Das Passwort braucht mindestens ein Sonderzeichen";
+}
 //bcrypt, das Verfahren hinter PASSWORD_DEFAULT, liest nur die ersten 72 Bytes
 if (strlen($password) > 72) {
-    $errors[] = "Das Passwort darf höchstens 72 Zeichen lang sein";
+    $errors[] = "Das Passwort darf höochstens 72 Zeichen lang sein";
 }
 
 if ($errors) {
