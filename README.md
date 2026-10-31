@@ -16,14 +16,16 @@ This is a learning project. You cannot buy anything, and the products, prices an
 - Category pages with sorting by price. Unknown and empty categories show a hint.
 - Product page with image gallery, discount price and quantity picker
 - Cart: change quantity, remove items, add premium shipping. The contents survive a reload (localStorage), the product data is loaded from the API.
-- Login form, registration form and 404 page
+- Registration and login. The forms check the input in the browser first, the PHP backend checks it again. After the login the header shows a logout button, and logging out empties the cart.
+- 404 page
 
 The catalogue has 144 products in 12 categories. It lives in a MySQL database and is read through a small PHP API.
 
 ### What is still missing
 
 - Most links in the main menu do not lead anywhere yet. The catalogue only covers cameras, lenses, accessories and binoculars, so entries like "Stative" or "Speicher" have no products behind them. All 12 categories are reachable through the menu or the cards on the home page.
-- Login, registration, newsletter and "Zur Kasse" (checkout) are not connected in the shop yet. The backend already has endpoints for registration, login, logout and for asking who is logged in. The forms in the shop do not call them yet. Saving orders and the newsletter are still missing, the database already has tables for orders and deliveries, but nothing writes to them.
+- Newsletter and "Zur Kasse" (checkout) are interface only. Saving orders is the next step: The database already has tables for orders and deliveries, but nothing writes to them yet. "Passwort vergessen?" is only a link, it needs sending mails and a table for reset tokens.
+- The cart lives in the browser (localStorage) and does not know the user. It is emptied on logout, but if someone logs in as another user without logging out first, the cart stays.
 
 ### Getting started
 
@@ -108,6 +110,8 @@ A few things I tripped over:
 - What the browser checks in a form (`required`, `minLength`) can be bypassed. The server has to check the input again.
 - A cookie only holds a number. The session with the user stays on the server, and after the login the session id has to be renewed.
 - If PHP crashes before it sends the CORS headers, the browser shows a CORS error although the real problem is a typo in the PHP file.
+- The cart only lives in the browser, so it does not know who is logged in. After switching users the old cart was still there, that is why logging out empties it.
+- A form needs state for the values and one for the error messages, and the `name` of every field has to match the key in both.
 
 ---
 
@@ -125,14 +129,16 @@ Es ist ein Lernprojekt. Man kann nichts kaufen, und die Produkte, Preise und Rab
 - Kategorieseiten mit Sortierung nach Preis. Unbekannte und leere Kategorien zeigen einen Hinweis.
 - Produktseite mit Bildergalerie, Rabattpreis und Mengenwahl
 - Warenkorb: Menge ändern, Artikel entfernen, Premiumversand zubuchen. Der Inhalt bleibt nach dem Neuladen erhalten (localStorage), die Produktdaten werden aus der API geladen.
-- Login-Formular, Registrierungsformular und 404-Seite
+- Registrierung und Login. Die Formulare prüfen die Eingaben zuerst im Browser, das PHP-Backend prüft sie noch einmal. Nach dem Login zeigt der Header einen Abmelden-Knopf, und beim Abmelden wird der Warenkorb geleert.
+- 404-Seite
 
 Im Katalog sind 144 Produkte in 12 Kategorien. Sie liegen in einer MySQL-Datenbank und werden über eine kleine PHP-API gelesen.
 
 ### Was noch fehlt
 
 - Die meisten Links im Hauptmenü führen noch nirgendwohin. Der Katalog enthält nur Kameras, Objektive, Zubehör und Ferngläser, hinter Einträgen wie "Stative" oder "Speicher" stehen keine Produkte. Alle 12 Kategorien erreicht man über das Menü oder die Karten auf der Startseite.
-- Login, Registrierung, Newsletter und "Zur Kasse" sind im Shop noch nicht angebunden. Das Backend hat schon Endpunkte für Registrierung, Login, Logout und für die Frage, wer gerade angemeldet ist. Die Formulare im Shop rufen sie noch nicht auf. Das Speichern von Bestellungen und der Newsletter fehlen noch, in der Datenbank gibt es schon Tabellen für Bestellungen und Lieferungen, aber nichts schreibt dort hinein.
+- Newsletter und "Zur Kasse" sind nur Oberfläche. Das Speichern von Bestellungen ist der nächste Schritt: In der Datenbank gibt es schon Tabellen für Bestellungen und Lieferungen, aber nichts schreibt dort hinein. "Passwort vergessen?" ist nur ein Link, dafür braucht es Mailversand und eine Tabelle für Reset-Tokens.
+- Der Warenkorb liegt im Browser (localStorage) und kennt den Benutzer nicht. Beim Abmelden wird er geleert, meldet sich aber jemand ohne Abmelden direkt als anderer Benutzer an, bleibt der Warenkorb stehen.
 
 ### Starten
 
@@ -217,3 +223,5 @@ Ein paar Dinge, über die ich gestolpert bin:
 - Was der Browser in einem Formular prüft (`required`, `minLength`), lässt sich umgehen. Der Server muss die Eingaben noch einmal prüfen.
 - Ein Cookie enthält nur eine Nummer. Die Session mit dem Benutzer bleibt auf dem Server, und nach dem Login muss die Session-ID erneuert werden.
 - Stürzt PHP ab, bevor es die CORS-Header sendet, zeigt der Browser einen CORS-Fehler, obwohl in Wirklichkeit ein Tippfehler in der PHP-Datei steckt.
+- Der Warenkorb liegt nur im Browser und weiß nicht, wer angemeldet ist. Nach einem Benutzerwechsel war der alte Warenkorb noch da, deshalb wird er beim Abmelden geleert.
+- Ein Formular braucht einen State für die Werte und einen für die Fehlermeldungen, und der `name` jedes Feldes muss zum Schlüssel in beiden passen.
