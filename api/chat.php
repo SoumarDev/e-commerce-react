@@ -1,6 +1,6 @@
 <?php
-// Chat-Endpunkt: nimmt die Nachricht eines Kunden entgegen und gibt die Antwort von Claude zurück
-// Aufruf: POST chat.php mit JSON {message}
+// Chat-Endpunkt: nimmt das Gespräch mit einem Kunden entgegen und gibt die Antwort von Claude zurück
+// Aufruf: POST chat.php mit JSON {messages: [{role, content}, ...]}, die letzte Nachricht ist vom Kunden
 // Antwort: 200 {reply}, 405 falsche Methode, 422 ungültige Eingabe, 429 zu viele Anfragen, 502 Fehler bei Claude
 
 require "db.php";
@@ -24,20 +24,57 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 // Rohtext des Anfragekörpers lesen und aus JSON in ein Array umwandeln
 $data = json_decode(file_get_contents("php://input"), true);
 
-// kein gültiges JSON, kein Feld "message" oder kein Text: 422
-if (!is_array($data) || !isset($data["message"]) || !is_string($data["message"])) {
+// kein gültiges JSON, kein Feld "messages" oder keine Liste: 422
+if (!is_array($data) || !isset($data["messages"]) || !is_array($data["messages"])) {
     http_response_code(422);
-    echo json_encode(["error" => "Nachricht fehlt"]);
+    echo json_encode(["error" => "Nachrichten fehlen"]);
     exit;
 }
 
-// Leerzeichen am Rand entfernen 
-$message = trim($data["message"]);
+// array_values setzt die Schlüssel auf 0, 1, 2 ... (auch wenn jemand andere Schlüssel schickt)
+$list = array_values($data["messages"]);
 
-// Leer oder zu lang: 422. Die Grenze schützt vor langen und teuren Texten
-if ($message === "" || mb_strlen($message) > 500) {
+// Mindestens eine, höchstens 20 Nachrichten (das hält die Kosten im Rahmen)
+if (count($list) < 1 || count($list) > 20) {
     http_response_code(422);
-    echo json_encode(["error" => "Die Nachricht muss zwischen 1 und 500 Zeichen lang sein"]);
+    echo json_encode(["error" => "Das Gespräch muss 1 bis 20 Nachrichten haben"]);
+    exit;
+}
+
+$messages = [];
+foreach ($list as $i => $item) {
+    // Die Rollen wechseln sich ab: 0 = Kunde, 1 = Bot, 2 = Kunde ...
+    // So beginnt und endet das Gespräch immer mit dem Kunden
+    $role = $i % 2 === 0 ? "user" : "assistant";
+
+    if (
+        !is_array($item)
+        || ($item["role"] ?? null) !== $role
+        || !is_string($item["content"] ?? null)
+    ) {
+        http_response_code(422);
+        echo json_encode(["error" => "Ungültiges Gespräch"]);
+        exit;
+    }
+
+    $content = trim($item["content"]);
+    // Kunden-Texte höchstens 500 Zeichen, Antworten des Bots dürfen länger sein
+    $maxLength = $role === "user" ? 500 : 2000;
+
+    if ($content === "" || mb_strlen($content) > $maxLength) {
+        http_response_code(422);
+        echo json_encode(["error" => "Eine Nachricht ist leer oder zu lang (Kunde höchstens 500 Zeichen)"]);
+        exit;
+    }
+
+    // Nur role und content übernehmen, weitere Felder aus der Anfrage fallen weg
+    $messages[] = ["role" => $role, "content" => $content];
+}
+
+// Die letzte Nachricht muss vom Kunden sein (also eine ungerade Anzahl)
+if (count($messages) % 2 === 0) {
+    http_response_code(422);
+    echo json_encode(["error" => "Die letzte Nachricht muss vom Kunden sein"]);
     exit;
 }
 
@@ -63,7 +100,7 @@ foreach ($stmt->fetchAll() as $row) {
 $catalog = implode("\n", $catalogLines);
 
 // Rolle und Regeln des Bots plus der Katalog. Der Kunde sieht diesen Text nicht
-$system = "Du bist der Beratungs-Assistent des Kamera Shops "
+$system = "Du bist der Beratungs-Assistent des Kamera Shops. "
     . "Antworte kurz und freundlich auf Deutsch, in höchstens fünf Sätzen und ohne Markdown (keine Sternchen, keine Listen mit Strichen).\n"
     . "Empfiehl nur Produkte aus der folgenden Liste und erfinde keine. Nenne Preise genau so, wie sie in der Liste stehen, und rechne nie selbst.\n"
     . "Wenn du etwas nicht weißt oder es nicht in der Liste steht, sag es ehrlich.\n"
@@ -84,10 +121,8 @@ try {
         model: "claude-haiku-5-5", // Das Modell, hier wechseln wir bei Bedarf
         maxTokens: 2000,           // Obergrenze für die Länge der Antwort
         system: $system,
-        // Das Gespräch als Liste von Nachrichten (role: user = Kunde, assistant = Bot) 
-        messages: [
-            ["role" => "user", "content" => $message],
-        ],
+        // Das Gespräch als Liste von Nachrichten (role: user = Kunde, assistant = Bot)
+        messages: $messages,
     );
 
     // Die Antwort besteht aus Blöcken (Text, Denken ...), wir sammeln nur den Text
