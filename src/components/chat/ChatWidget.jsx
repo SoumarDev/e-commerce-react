@@ -1,10 +1,12 @@
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faComments, faXmark, faPaperPlane } from "@fortawesome/free-solid-svg-icons"
 import { sendChat } from "../../api/chat"
 
 // Der Server erlaubt höchstens 20 Nachrichten pro Gespräch (siehe chat.php)
 const MAX_MESSAGES = 20
+// Und jede Frage höchstens 500 Zeichen
+const MAX_LENGTH = 500
 
 // Chat-Fenster für die Beratung. Steht auf jeder Seite unten rechts.
 export default function ChatWidget() {
@@ -16,6 +18,24 @@ export default function ChatWidget() {
     // true, solange wir auf die Antwort warten
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState("")
+
+    // Verweise auf das Nachrichtenfeld und das Eingabefeld, damit wir sie ansprechen können
+    const bodyRef = useRef(null)
+    const inputRef = useRef(null)
+
+    // Nach jeder Änderung ganz nach unten scrollen, damit die neueste Nachricht zu sehen ist
+    useEffect(() => {
+        if (bodyRef.current) {
+            bodyRef.current.scrollTop = bodyRef.current.scrollHeight
+        }
+    }, [messages, isLoading, error, isOpen])
+
+    // Cursor ins Eingabefeld, wenn das Fenster aufgeht und wenn die Antwort da ist
+    useEffect(() => {
+        if (isOpen && !isLoading && inputRef.current) {
+            inputRef.current.focus()
+        }
+    }, [isOpen, isLoading])
 
     async function handleSubmit(e) {
         e.preventDefault()
@@ -65,7 +85,7 @@ export default function ChatWidget() {
                         </button>
                     </div>
 
-                    <div className="chat-body">
+                    <div className="chat-body" ref={bodyRef}>
                         <p>Hallo! Ich helfe Ihnen bei der Auswahl von Kameras, Objektiven und Zubehör.</p>
 
                         {/* Die Liste wird nur hinten ergänzt, deshalb reicht der Index als key */}
@@ -96,7 +116,8 @@ export default function ChatWidget() {
                                 className="form-control"
                                 placeholder="Ihre Frage"
                                 aria-label="Ihre Frage"
-                                maxLength={500}
+                                maxLength={MAX_LENGTH}
+                                ref={inputRef}
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 disabled={isLoading}
@@ -109,6 +130,7 @@ export default function ChatWidget() {
                             >
                                 <FontAwesomeIcon icon={faPaperPlane} />
                             </button>
+                            <span className="chat-counter">{input.length}/{MAX_LENGTH}</span>
                         </form>
                     )}
                 </div>
