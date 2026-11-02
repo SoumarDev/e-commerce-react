@@ -1,8 +1,8 @@
 <?php
 // Chat-Endpunkt: nimmt das Gespräch mit einem Kunden entgegen und gibt die Antwort von Claude zurück
 // Aufruf: POST chat.php mit JSON {messages: [{role, content}, ...]}, die letzte Nachricht ist vom Kunden
-// Antwort: 200 {reply}, 405 falsche Methode, 422 ungültige Eingabe, 429 zu viele Anfragen,
-//          500 Fehler bei uns, 502 Fehler bei Claude
+// Antwort: 200 {reply}, 405 falsche Methode, 422 ungültige Eingabe, 429 zu viele Anfragen
+//          (von dieser IP oder bei Claude), 500 Fehler bei uns, 502 Fehler bei Claude
 
 // Fehlermeldungen nie an den Browser schicken, sie landen nur im Protokoll
 ini_set("display_errors", "0");
@@ -84,6 +84,64 @@ if (count($messages) % 2 === 0) {
 
 // Ab hier kann viel schiefgehen (Datenbank, Schlüsseldatei, Claude), deshalb steht alles im try
 try {
+    // ###########################
+    // Anfragen begrenzen
+    // ###########################
+    // Jede Anfrage kostet Geld. Darum darf jede IP-Adresse nur $maxRequests Fragen pro Stunde stellen.
+    // Die Zeitpunkte stehen in einer Datei neben der Schlüsseldatei, außerhalb von htdocs und nicht im Repo
+    $limitFile = __DIR__ . "/../../kamera-shop-secrets/chat-limit.json";
+    $maxRequests = 20;
+    $window = 3600; // Sekunden, also eine Stunde
+    $ip = $_SERVER["REMOTE_ADDR"];
+    $now = time();
+
+    // "c+" = lesen und schreiben, die Datei wird angelegt, wenn es sie noch nicht gibt
+    $fp = fopen($limitFile, "c+");
+    if ($fp === false) {
+        throw new RuntimeException("chat-limit.json nicht beschreibbar");
+    }
+    // Sperren, damit zwei gleichzeitige Anfragen sich nicht überschreiben
+    flock($fp, LOCK_EX);
+
+    // Aufbau der Datei: {"127.0.0.1": [Zeitpunkt, Zeitpunkt, ...], "andere IP": [...]}
+    $all = json_decode(stream_get_contents($fp), true);
+    if (!is_array($all)) {
+        $all = [];
+    }
+
+    // Aufräumen: Zeitpunkte, die älter als eine Stunde sind, zählen nicht mehr
+    foreach ($all as $key => $times) {
+        $times = array_values(array_filter((array) $times, fn($t) => $t > $now - $window));
+        if ($times) {
+            $all[$key] = $times;
+        } else {
+            unset($all[$key]);
+        }
+    }
+
+    $times = $all[$ip] ?? [];
+
+    // Zu viele Anfragen in der letzten Stunde: 429. Der älteste Zeitpunkt läuft als Erster ab
+    if (count($times) >= $maxRequests) {
+        $retryAfter = $times[0] + $window - $now;
+        flock($fp, LOCK_UN);
+        fclose($fp);
+        header("Retry-After: " . $retryAfter);
+        http_response_code(429);
+        echo json_encode(["error" => "Sie haben zu viele Fragen gestellt (höchstens $maxRequests pro Stunde). Bitte versuchen Sie es später noch einmal"]);
+        exit;
+    }
+
+    // Diese Anfrage mitzählen und die Datei neu schreiben
+    $times[] = $now;
+    $all[$ip] = $times;
+    ftruncate($fp, 0);
+    rewind($fp);
+    fwrite($fp, json_encode($all));
+    fflush($fp);
+    flock($fp, LOCK_UN);
+    fclose($fp);
+
     // ###########################
     // Katalog laden
     // ###########################
